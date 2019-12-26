@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="row bg-secondary">
+        <div class="offset col-md-6 text-justify">
+            {% import "forms.html" as forms %}
+            <form action="." class="form-group bg-dark text-white" method="post" enctype="multipart/form-data"
+            style="padding: 15px 0 15px 25px;">
+                {{ forms.render(form) }}
+                <input type="file" name="image4" value="">
+                <hr>
+                <div class="actions">
+                    <input type="submit" class="btn primary text-white" value="Отправить">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        {% for user in paginated_users.items %}
+        <div class="col-md-4 card">
+            <ul>
+                <li>{{ user.second_name }}</li>
+                <li>{{ user.first_name }}</li>
+                <li>{{ user.last_name }}</li>
+                <li>{{ user.image2 }}
+                    {% if user.image3 %}
+                    <img style="width: 100px; height: 100px;" src="static/{{user.image3}}"/>
+                    {% endif %}
+                </li>
+                <hr>
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+    <div class=pagination>{{endpoint}}
+        {% macro render_navigation(pagination, endpoint) %}
+        <div class=pagination>
+            {%- for page in pagination.iter_pages() %}
+            {% if page %}
+            {% if page != pagination.page %}
+            <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+            {% else %}
+            <strong>{{ page }}</strong>
+            {% endif %}
+            {% else %}
+            <span class=ellipsis>…</span>
+            {% endif %}
+            {%- endfor %}
+        </div>
+        {% endmacro %}
+    </div>
+    <div class="navigation">
+        {{ render_navigation(paginated_users, 'add_post') }}
+    </div>
+</div>
+</body>
+</html>
